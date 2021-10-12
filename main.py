@@ -87,15 +87,76 @@ def test_get_longest_same_bit_counts():
     assert get_longest_same_bit_counts([]) == []
 
 
+def is_prime(x):
+    """ 
+    Verifica daca un numar este prim
+    """
+
+    if x < 2:
+        return False
+    for i in range(2, x//2+1):
+        if x%i == 0:
+            return False
+    return True
+
+
+def if_digits_is_prime(x):
+    """ 
+    Verifica daca un numar ar toate cifrele prime
+    """
+
+    while x != 0:
+        if not is_prime(x%10):
+            return False
+        x //= 10
+    return True
+
+def list_with_prime_digits(lst):
+    """ 
+    Verifica daca o lista are toate numerele de cifre prime
+    """
+
+    for x in lst:
+        if not if_digits_is_prime(x):
+            return False
+    return True        
+
+def get_longest_prime_digits(lst: list[int]) -> list[int]:
+    """Functia returneaza cea mai lunga secventa a caror numere sunt formate doar din cifre prime
+
+    Args:
+        lst (list[int]): [o lista de numere intregi]
+
+    Returns:
+        list[int]: [returneaza cea mai lunga subsecventa a sirului avand numere de cifre prime]
+    """
+    subsecventa_max = []
+    for i in range(len(lst)):
+        for j in range(i, len(lst)):
+            if list_with_prime_digits(lst[i:j + 1]) and len(lst[i:j + 1]) >= len(subsecventa_max):
+                subsecventa_max = lst[i:j + 1]
+    return subsecventa_max
+
+
+def test_get_logest_prime_digits():
+    assert get_longest_prime_digits([1, 2, 3, 4, 5, 6]) == [2, 3]
+    assert get_longest_prime_digits([2, 3, 25, 75, 5]) == [2, 3, 25, 75, 5]
+    assert get_longest_prime_digits([]) == []
+    assert get_longest_prime_digits([1, 6, 8, 4, 6]) == []
+
+
 def printMenu():
     print("1.Citire date ")
     print("2.Determina cea mai lunga secventa in care numerele au acelasi numar de 1 in scrierea binara ")
     print("3.Determina cea mai lunga secventa in care numerele sunt pare ")
-    print("4.Iesi")
+    print("4.Determina cea mai lunga secventa de numere cu cifre prime ")
+    print("5.Iesi")
 
 
 def main():
     test_get_longest_all_even()
+    test_get_longest_same_bit_counts()
+    test_get_logest_prime_digits()
     list = []
     while True:
         printMenu()
@@ -107,6 +168,8 @@ def main():
         elif optiune == "3":
             print(get_longest_all_even(list))
         elif optiune == "4":
+            print(get_longest_prime_digits(list))
+        elif optiune == "5":
             break
         else:
             print("Optiune invalida! Reincercati ")
